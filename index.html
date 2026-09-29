@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Volcanex: Interactive Science Exhibit — Philippine Volcanic Landscape & The Luzon Volcanic Arc">
+  <title>Volcanex | Philippine Volcanic Landscape & Luzon Volcanic Arc</title>
+
+   <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png">
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-header" id="header">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo" aria-label="Volcanex Home">
+        <img src="icon.png" alt="Volcanex Icon" class="nav-logo-icon" style="height: 28px; width: auto; vertical-align: middle; margin-right: 8px;"> VOLCANEX
+      </a>
+      <button class="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <nav class="nav-menu" id="nav-menu">
+        <ul>
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#tectonics" class="nav-link">Tectonics</a></li>
+          <li><a href="#map-section" class="nav-link">Arc Map</a></li>
+          <li><a href="#luzon-arc" class="nav-link">Luzon Arc</a></li>
+          <li><a href="#volcanoes" class="nav-link">Volcanoes</a></li>
+          <li><a href="#formation" class="nav-link">Formation</a></li>
+          <li><a href="#hazards" class="nav-link">Activity</a></li>
+          <li><a href="#simulation" class="nav-link">Simulation</a></li>
+          <li><a href="#sources" class="nav-link">Sources</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. Hero Section -->
+    <section id="hero" class="hero-section">
+      <canvas id="ash-canvas" aria-hidden="true"></canvas>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <span class="tagline">EARTH & LIFE SCIENCE EXHIBIT</span>
+        <h1 class="hero-title"><span class="highlight">VOL</span>CANEX</h1>
+        <p class="hero-subtitle">“Tracing the Luzon Volcanic Arc and the Tectonic Forces Beneath It”</p>
+        <p class="hero-intro">
+          The Philippines lies within a tectonically active region where complex plate interactions generate frequent seismic activity, subduction, and distinct volcanic arcs.
+        </p>
+        <div class="hero-actions">
+          <a href="#map-section" class="btn btn-primary">Explore The Volcanoes</a>
+          <a href="#luzon-arc" class="btn btn-secondary">How The Arc Forms</a>
+        </div>
+      </div>
+      <div class="scroll-indicator" aria-hidden="true">
+        <span>SCROLL TO DISCOVER</span>
+        <div class="chevron"></div>
+      </div>
+    </section>
+
+    <!-- 2. Tectonics Section -->
+    <section id="tectonics" class="section-padding">
+      <div class="container">
+        <div class="section-header center">
+          <h2>Why Is the Philippines So Volcanically Active?</h2>
+          <p>Located in the western Pacific margin, the Philippine archipelago is surrounded by converging oceanic plates and opposing subduction zone trenches.</p>
+        </div>
+
+        <div class="flowchart-container">
+          <div class="flow-step" data-step="1">
+            <div class="step-num">01</div>
+            <h3>TECTONIC PLATES</h3>
+            <p>Slabs of oceanic lithosphere (e.g., Philippine Sea Plate, Sunda Block/Eurasian Plate) continuously move and converge.</p>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step" data-step="2">
+            <div class="step-num">02</div>
+            <h3>SUBDUCTION</h3>
+            <p>Denser oceanic crust bends and sinks into the mantle at oceanic trenches (e.g., Manila Trench, Philippine Trench).</p>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step" data-step="3">
+            <div class="step-num">03</div>
+            <h3>FLUX MELTING</h3>
+            <p>High pressures and dewatering of the sinking slab reduce mantle melting temperatures, creating buoyant magma.</p>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step" data-step="4">
+            <div class="step-num">04</div>
+            <h3>MAGMA ASCENT</h3>
+            <p>Less dense magma rises vertically through fractures and faults in the overlying continental or island-arc crust.</p>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step" data-step="5">
+            <div class="step-num">05</div>
+            <h3>VOLCANIC ARC</h3>
+            <p>Eruptions over millions of years construct aligned chains of stratovolcanoes parallel to the trench boundary.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Interactive Map Section -->
+    <section id="map-section" class="section-padding dark-bg">
+      <div class="container">
+        <div class="section-header">
+          <h2>Map the Volcanic Landscape</h2>
+          <p>Explore major active volcanoes, regional subduction trenches, and the specific chain defining the Luzon Volcanic Arc.</p>
+        </div>
+
+        <div class="map-wrapper">
+          <div class="map-controls">
+            <button class="filter-btn active" data-map-filter="all">All Features</button>
+            <button class="filter-btn" data-map-filter="luzon-arc">Luzon Arc Chain</button>
+            <button class="filter-btn" data-map-filter="other-arc">Other Volcanic Chains</button>
+          </div>
+
+          <div class="map-display">
+            <!-- Stylized Geographic Vector Map of the Philippines -->
+            <svg id="ph-svg-map" viewBox="0 0 600 800" aria-label="Interactive Tectonic and Volcanic Map of the Philippines">
+              <defs>
+                <linearGradient id="arcGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#E07A5F" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#E07A5F" stop-opacity="0.1"/>
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <!-- Water Base -->
+              <rect width="600" height="800" fill="#0B132B" />
+
+              <!-- Subduction Trenches (Dashed Blue Lines) -->
+              <g class="trenches">
+                <!-- Manila Trench -->
+                <path d="M 170 120 Q 180 250 200 380" stroke="#3A506B" stroke-width="4" stroke-dasharray="6,4" fill="none"/>
+                <text x="100" y="220" fill="#3A506B" font-size="11" class="map-label">MANILA TRENCH</text>
+                
+                <!-- Philippine Trench -->
+                <path d="M 430 350 Q 470 520 480 720" stroke="#3A506B" stroke-width="4" stroke-dasharray="6,4" fill="none"/>
+                <text x="475" y="550" fill="#3A506B" font-size="11" class="map-label">PHILIPPINE TRENCH</text>
+              </g>
+
+              <!-- Landmass Outlines (Stylized Vector Shapes) -->
+              <g class="landmass" fill="#1C2541" stroke="#3A506B" stroke-width="1.5">
+                <!-- Northern & Central Luzon -->
+                <path d="M 230 80 L 290 80 L 310 140 L 290 200 L 310 260 L 260 360 L 210 350 L 210 280 L 240 220 L 220 140 Z" />
+                <!-- Southern Luzon / Bicol -->
+                <path d="M 260 360 L 330 380 L 380 430 L 340 460 L 290 420 Z" />
+                <!-- Mindoro -->
+                <path d="M 190 380 L 230 380 L 220 440 L 180 420 Z" />
+                <!-- Visayas Islands -->
+                <path d="M 310 460 L 350 460 L 370 520 L 320 540 Z" />
+                <path d="M 260 470 L 300 480 L 290 550 L 250 520 Z" />
+                <!-- Mindanao -->
+                <path d="M 300 580 L 420 570 L 440 680 L 350 740 L 280 700 L 310 650 Z" />
+              </g>
+
+              <!-- Luzon Volcanic Arc Alignment Line -->
+              <path class="arc-line" d="M 255 90 L 250 160 L 235 240 L 225 320 L 240 370 L 270 410" 
+                    stroke="#E07A5F" stroke-width="3" fill="none" stroke-dasharray="4,2" filter="url(#glow)"/>
+
+              <!-- Interactive Volcano Markers -->
+              <!-- Luzon Arc Volcanoes -->
+              <g class="marker luzon-arc" data-id="pinatubo" transform="translate(225,320)">
+                <polygon points="0,-10 9,8 -9,8" fill="#E07A5F" class="pulse-marker"/>
+                <circle r="3" fill="#F4F1DE"/>
+                <text x="14" y="4" fill="#F4F1DE" font-size="12" font-weight="bold">Pinatubo</text>
+              </g>
+
+              <g class="marker luzon-arc" data-id="taal" transform="translate(240,370)">
+                <polygon points="0,-10 9,8 -9,8" fill="#E07A5F" class="pulse-marker"/>
+                <circle r="3" fill="#F4F1DE"/>
+                <text x="14" y="4" fill="#F4F1DE" font-size="12" font-weight="bold">Taal</text>
+              </g>
+
+              <g class="marker luzon-arc" data-id="babuyan" transform="translate(255,90)">
+                <polygon points="0,-10 9,8 -9,8" fill="#E07A5F" class="pulse-marker"/>
+                <circle r="3" fill="#F4F1DE"/>
+                <text x="14" y="4" fill="#F4F1DE" font-size="12" font-weight="bold">Babuyan Claro</text>
+              </g>
+
+              <!-- Other Philippine Volcanoes (Non-Luzon Arc or Distinct Subduction Systems) -->
+              <g class="marker other-arc" data-id="mayon" transform="translate(360,430)">
+                <polygon points="0,-10 9,8 -9,8" fill="#64DFDF" class="pulse-marker"/>
+                <circle r="3" fill="#F4F1DE"/>
+                <text x="14" y="4" fill="#F4F1DE" font-size="12" font-weight="bold">Mayon</text>
+              </g>
+
+              <g class="marker other-arc" data-id="bulusan" transform="translate(370,460)">
+                <polygon points="0,-10 9,8 -9,8" fill="#64DFDF" class="pulse-marker"/>
+                <circle r="3" fill="#F4F1DE"/>
+                <text x="14" y="4" fill="#F4F1DE" font-size="12" font-weight="bold">Bulusan</text>
+              </g>
+
+              <g class="marker other-arc" data-id="kanlaon" transform="translate(320,510)">
+                <polygon points="0,-10 9,8 -9,8" fill="#64DFDF" class="pulse-marker"/>
+                <circle r="3" fill="#F4F1DE"/>
+                <text x="14" y="4" fill="#F4F1DE" font-size="12" font-weight="bold">Kanlaon</text>
+              </g>
+
+              <g class="marker other-arc" data-id="matutum" transform="translate(380,710)">
+                <polygon points="0,-10 9,8 -9,8" fill="#64DFDF" class="pulse-marker"/>
+                <circle r="3" fill="#F4F1DE"/>
+                <text x="14" y="4" fill="#F4F1DE" font-size="12" font-weight="bold">Matutum</text>
+              </g>
+            </svg>
+
+            <!-- Map Legend -->
+            <div class="map-legend">
+              <h4>GEOLOGICAL LEGEND</h4>
+              <div class="legend-item">
+                <span class="legend-symbol arc-symbol"></span>
+                <span>Luzon Volcanic Arc (Manila Trench System)</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-symbol other-symbol"></span>
+                <span>Other Active Volcanic Systems (Philippine Trench/East)</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-symbol trench-symbol"></span>
+                <span>Subduction Trench Boundaries</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Information Panel -->
+          <div class="map-info-panel" id="map-info-panel">
+            <div class="panel-placeholder">
+              <span class="icon">🔍</span>
+              <h3>Select a Volcano Marker</h3>
+              <p>Click any volcanic symbol on the map to inspect its tectonic alignment, eruption history, and geological classification.</p>
+            </div>
+            <div class="panel-content hidden" id="panel-content">
+              <!-- Content inserted dynamically via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. The Luzon Volcanic Arc Section -->
+    <section id="luzon-arc" class="section-padding">
+      <div class="container">
+        <div class="section-header">
+          <h2>Following the Luzon Volcanic Arc</h2>
+          <p>Understand the specific geometry and mantle processes that create this prominent western volcanic chain.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="arc-text">
+            <h3>Arc Mechanics & Subduction</h3>
+            <p>
+              A <strong>volcanic arc</strong> is a curved or linear chain of volcanoes constructed above a subducting tectonic plate. The <strong>Luzon Volcanic Arc</strong> extends from northern Taiwan down through the Babuyan Islands and Western Luzon.
+            </p>
+            <p>
+              It is formed by the eastward subduction of the <strong>South China Sea oceanic lithosphere</strong> (part of the Eurasian/Sunda tectonic realm) beneath the Philippine Mobile Belt along the <strong>Manila Trench</strong>.
+            </p>
+            <div class="callout-box">
+              <h4>⚠️ Scientific Distinction</h4>
+              <p>
+                <strong>Not all volcanoes in the Philippines belong to the Luzon Volcanic Arc!</strong> Volcanoes in eastern Luzon (like Mayon) or Visayas/Mindanao result from different subduction zones, such as the Philippine Trench or Cotabato Trench.
+              </p>
+            </div>
+          </div>
+
+          <!-- Cross-Section Schematic Visual -->
+          <div class="diagram-wrapper">
+            <svg viewBox="0 0 500 350" class="subduction-svg">
+              <rect width="500" height="350" fill="#0B132B" />
+              <!-- Mantle -->
+              <path d="M 0 160 Q 200 160 500 200 L 500 350 L 0 350 Z" fill="#1C2541" />
+              <!-- Subducting Oceanic Slab -->
+              <path d="M 0 140 L 160 140 L 380 320 L 320 350 L 0 160 Z" fill="#3A506B" />
+              <!-- Overriding Crust -->
+              <path d="M 180 140 L 500 140 L 500 200 Q 300 160 200 180 Z" fill="#2B3A4E" />
+              
+              <!-- Volcano Shape -->
+              <polygon points="340,140 365,80 390,140" fill="#E07A5F" />
+              
+              <!-- Magma Chamber & Conduit -->
+              <circle cx="365" cy="220" r="18" fill="#E07A5F" opacity="0.8" filter="url(#glow)"/>
+              <path d="M 365 220 L 365 80" stroke="#E07A5F" stroke-width="4" stroke-dasharray="4,2"/>
+
+              <!-- Dehydration / Melting Zone -->
+              <path d="M 260 250 Q 300 240 340 220" stroke="#64DFDF" stroke-width="2" stroke-dasharray="2,2"/>
+
+              <!-- Labels -->
+              <text x="20" y="125" fill="#F4F1DE" font-size="11">Subducting Oceanic Plate</text>
+              <text x="80" y="180" fill="#64DFDF" font-size="10">Manila Trench</text>
+              <text x="390" y="125" fill="#F4F1DE" font-size="11">Overriding Crust</text>
+              <text x="320" y="70" fill="#E07A5F" font-size="12" font-weight="bold">Volcanic Arc</text>
+              <text x="220" y="270" fill="#64DFDF" font-size="10">Fluids Released (Water)</text>
+              <text x="375" y="225" fill="#E07A5F" font-size="10">Partial Melting Zone</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Active Volcanoes Gallery -->
+    <section id="volcanoes" class="section-padding dark-bg">
+      <div class="container">
+        <div class="section-header">
+          <h2>Volcanoes of the Philippine Landscape</h2>
+          <p>Search and filter active volcanoes throughout the archipelago to analyze their specific locations and tectonic contexts.</p>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="gallery-controls">
+          <div class="search-box">
+            <input type="text" id="volcano-search" placeholder="Search volcano by name or province..." aria-label="Search volcanoes">
+          </div>
+          <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="luzon">Luzon Arc Only</button>
+            <button class="filter-btn" data-filter="stratovolcano">Stratovolcanoes</button>
+            <button class="filter-btn" data-filter="complex">Complex / Caldera</button>
+          </div>
+        </div>
+
+        <!-- Volcano Cards Grid -->
+        <div class="volcano-grid" id="volcano-grid">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Step-by-step Formation Section -->
+    <section id="formation" class="section-padding">
+      <div class="container">
+        <div class="section-header center">
+          <h2>From Subduction to Eruption</h2>
+          <p>Step through the multi-stage geological process that forms a subduction-driven volcanic arc over millions of years.</p>
+        </div>
+
+        <div class="timeline-stepper">
+          <div class="stepper-nav" role="tablist">
+            <button class="step-btn active" data-step-target="1">01 Plate Motion</button>
+            <button class="step-btn" data-step-target="2">02 Subduction</button>
+            <button class="step-btn" data-step-target="3">03 Water & Heat</button>
+            <button class="step-btn" data-step-target="4">04 Magma Generation</button>
+            <button class="step-btn" data-step-target="5">05 Magma Ascent</button>
+            <button class="step-btn" data-step-target="6">06 Arc Eruption</button>
+          </div>
+
+          <div class="stepper-content">
+            <div class="step-panel active" id="step-panel-1">
+              <div class="step-info">
+                <h3>Stage 01: Convergent Plate Movement</h3>
+                <p>Tectonic forces drive an oceanic plate toward an adjacent continental or oceanic plate at speeds of several centimeters per year.</p>
+              </div>
+            </div>
+            <div class="step-panel" id="step-panel-2">
+              <div class="step-info">
+                <h3>Stage 02: Trench Subduction</h3>
+                <p>The colder, denser oceanic lithosphere bends and sinks into the asthenosphere, forming a deep ocean trench (e.g., Manila Trench).</p>
+              </div>
+            </div>
+            <div class="step-panel" id="step-panel-3">
+              <div class="step-info">
+                <h3>Stage 03: Dehydration & Fluxing</h3>
+                <p>As the slab sinks below 80–100 km, extreme heat and pressure squeeze locked water out of oceanic hydrated minerals into the overlying mantle wedge.</p>
+              </div>
+            </div>
+            <div class="step-panel" id="step-panel-4">
+              <div class="step-info">
+                <h3>Stage 04: Partial Melting</h3>
+                <p>Addition of water lowers the melting point of mantle peridotite (flux melting), generating buoyant magma rich in dissolved gases.</p>
+              </div>
+            </div>
+            <div class="step-panel" id="step-panel-5">
+              <div class="step-info">
+                <h3>Stage 05: Crustal Ascent</h3>
+                <p>Being less dense than surrounding rock, the hot magma rises through fractures and forms storage reservoirs (magma chambers) in the upper crust.</p>
+              </div>
+            </div>
+            <div class="step-panel" id="step-panel-6">
+              <div class="step-info">
+                <h3>Stage 06: Volcanic Arc Formation</h3>
+                <p>Repeated explosive and effusive eruptions build a parallel line of stratovolcanoes roughly 100 to 200 km inland from the subduction trench.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Volcanic Activity & Hazards Section -->
+    <section id="hazards" class="section-padding dark-bg">
+      <div class="container">
+        <div class="section-header">
+          <h2>Why Volcanic Activity Matters</h2>
+          <p>Volcanic processes pose distinct geological hazards while simultaneously enriching the surrounding environment over long time scales.</p>
+        </div>
+
+        <div class="hazards-grid">
+          <div class="hazard-card">
+            <div class="hazard-icon">🌋</div>
+            <h3>Pyroclastic Flows</h3>
+            <p>Superheated currents of gas, ash, and rock fragments that travel downhill at high speeds. Highly destructive to structures in direct paths.</p>
+          </div>
+
+          <div class="hazard-card">
+            <div class="hazard-icon">🌊</div>
+            <h3>Lahars</h3>
+            <p>Volcanic mudflows formed when rain mixes with loose volcanic ash and debris. Heavy monsoon rains in the Philippines frequently trigger lahars.</p>
+          </div>
+
+          <div class="hazard-card">
+            <div class="hazard-icon">☁️</div>
+            <h3>Ashfall</h3>
+            <p>Fine particles of pulverised rock carried by winds over vast distances, causing respiratory issues, roof collapse, and flight disruptions.</p>
+          </div>
+
+          <div class="hazard-card">
+            <div class="hazard-icon">🌱</div>
+            <h3>Fertile Volcanic Soil</h3>
+            <p>Weathered volcanic rocks release essential mineral nutrients (potassium, phosphorus), creating some of the most productive agricultural lands.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Earthquakes + Volcanoes Section -->
+    <section id="tectonics-diff" class="section-padding">
+      <div class="container">
+        <div class="section-header center">
+          <h2>Two Signs of a Dynamic Earth</h2>
+          <p>Earthquakes and volcanic eruptions are distinct geological phenomena driven by tectonic plate movements.</p>
+        </div>
+
+        <div class="comparison-split">
+          <div class="comp-box">
+            <h3>TECTONIC EARTHQUAKES</h3>
+            <span class="subtext">Crustal Fracturing & Energy Release</span>
+            <ul>
+              <li>Caused by sudden slippage along faults or subduction plate boundaries.</li>
+              <li>Occur throughout the crust and deep within subducting slabs.</li>
+              <li>Can occur without any volcanic activity present.</li>
+            </ul>
+          </div>
+          <div class="comp-divider">VS</div>
+          <div class="comp-box">
+            <h3>VOLCANIC ACTIVITY</h3>
+            <span class="subtext">Magma Transport & Eruption</span>
+            <ul>
+              <li>Driven by molten rock ascent and expansion of trapped volcanic gases.</li>
+              <li>Localized around active volcanic vents and subterranean magma chambers.</li>
+              <li>Generates small <em>volcanic earthquakes</em> as magma fractures rock during ascent.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Interactive "Build the Arc" Simulation -->
+    <section id="simulation" class="section-padding dark-bg">
+      <div class="container">
+        <div class="section-header center">
+          <h2>Interactive Simulation: Build a Volcanic Arc</h2>
+          <p>Progress through the interactive controls below to simulate subduction dynamics and observe arc construction in real time.</p>
+        </div>
+
+        <div class="sim-container">
+          <div class="sim-canvas-wrapper">
+            <canvas id="sim-canvas" width="700" height="350"></canvas>
+          </div>
+
+          <div class="sim-controls">
+            <button class="sim-btn" id="sim-step-1">1. Position Plates</button>
+            <button class="sim-btn" id="sim-step-2" disabled>2. Start Subduction</button>
+            <button class="sim-btn" id="sim-step-3" disabled>3. Melt Mantle</button>
+            <button class="sim-btn" id="sim-step-4" disabled>4. Raise Magma</button>
+            <button class="sim-btn" id="sim-step-5" disabled>5. Form Arc</button>
+            <button class="sim-btn reset" id="sim-reset">🔄 Reset</button>
+          </div>
+
+          <div class="sim-status" id="sim-status-text">
+            Click Step 1 to position the subducting oceanic slab beneath the overriding crust.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. Key Takeaways Section -->
+    <section id="takeaways" class="section-padding">
+      <div class="container">
+        <div class="section-header center">
+          <h2>Three Things to Remember</h2>
+        </div>
+
+        <div class="takeaways-grid">
+          <div class="takeaway-card">
+            <span class="big-num">01</span>
+            <p>The Philippines is located in a highly active convergent tectonic region surrounded by opposing ocean trenches.</p>
+          </div>
+          <div class="takeaway-card">
+            <span class="big-num">02</span>
+            <p>Subduction forces water into the warm mantle, causing partial melting that produces buoyant magma.</p>
+          </div>
+          <div class="takeaway-card">
+            <span class="big-num">03</span>
+            <p>The Luzon Volcanic Arc represents a specific geological alignment formed by subduction along the Manila Trench.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Sources Section -->
+    <section id="sources" class="section-padding dark-bg">
+      <div class="container">
+        <div class="section-header">
+          <h2>Scientific Sources & References</h2>
+          <p>This educational website prioritizes official data from Philippine geological institutions and scientific literature.</p>
+        </div>
+
+        <div class="sources-list">
+          <div class="source-item">
+            <h4>Philippine Institute of Volcanology and Seismology (PHIVOLCS)</h4>
+            <p>Official volcano monitoring, classification, hazard maps, and active volcano bulletins.</p>
+            <a href="https://www.phivolcs.dost.gov.ph" target="_blank" rel="noopener">phivolcs.dost.gov.ph ↗</a>
+          </div>
+          <div class="source-item">
+            <h4>Mines and Geosciences Bureau (MGB - DENR)</h4>
+            <p>Geological quadrangle maps and tectonic framework reports of Northern and Central Luzon.</p>
+            <a href="https://mgb.gov.ph" target="_blank" rel="noopener">mgb.gov.ph ↗</a>
+          </div>
+          <div class="source-item">
+            <h4>United States Geological Survey (USGS) Earthquake Hazards Program</h4>
+            <p>Plate tectonics overview and subduction zone dynamics of the Western Pacific.</p>
+            <a href="https://www.usgs.gov" target="_blank" rel="noopener">usgs.gov ↗</a>
+          </div>
+        </div>
+
+        <div class="disclaimer-box">
+          <p><strong>Note:</strong> Information should always be cross-referenced with official, updated volcano bulletins and hazard advisories directly issued by PHIVOLCS-DOST.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Detail Modal Popup for Volcano Cards -->
+  <div class="modal-overlay" id="volcano-modal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close" aria-label="Close detail modal">&times;</button>
+      <div class="modal-body" id="modal-body">
+        <!-- Content dynamic via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <h3>VOLCANEX</h3>
+        <p>Modeling Earth’s Dynamic Processes  - Developed by Abasolo G.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#hero">Back to Top ↑</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Volcanex Earth & Life Science Interactive Exhibit. Educational Purpose Only.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
