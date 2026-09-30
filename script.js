@@ -1,6 +1,6 @@
 /**
  * VOLCANEX - Interactive Earth & Life Science Exhibit
- * script.js
+ * script.js (Refactored & Fixed)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,16 +25,18 @@ function initNavigation() {
 
   // Sticky header background transition
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
+    if (header) {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
     }
     highlightActiveNavLink();
   });
 
   // Mobile menu toggle
-  if (mobileToggle) {
+  if (mobileToggle && navMenu) {
     mobileToggle.addEventListener('click', () => {
       const isExpanded = mobileToggle.getAttribute('aria-expanded') === 'true';
       mobileToggle.setAttribute('aria-expanded', !isExpanded);
@@ -45,9 +47,11 @@ function initNavigation() {
   // Close mobile nav on link click
   navLinks.forEach(link => {
     link.addEventListener('click', () => {
-      if (navMenu.classList.contains('active')) {
+      if (navMenu && navMenu.classList.contains('active')) {
         navMenu.classList.remove('active');
-        mobileToggle.setAttribute('aria-expanded', 'false');
+        if (mobileToggle) {
+          mobileToggle.setAttribute('aria-expanded', 'false');
+        }
       }
     });
   });
@@ -104,7 +108,7 @@ function initParticleCanvas() {
       this.speedY = -(Math.random() * 1.2 + 0.3);
       this.speedX = Math.random() * 0.8 - 0.4;
       this.opacity = Math.random() * 0.6 + 0.2;
-      this.color = Math.random() > 0.4 ? '224, 122, 95' : '244, 241, 222'; // Warm orange or light ash
+      this.color = Math.random() > 0.4 ? '224, 122, 95' : '244, 241, 222';
     }
 
     update() {
@@ -123,11 +127,10 @@ function initParticleCanvas() {
     }
   }
 
-  // Initialize particle array
   const particleCount = Math.min(Math.floor(window.innerWidth / 15), 60);
   for (let i = 0; i < particleCount; i++) {
     const p = new AshParticle();
-    p.y = Math.random() * canvas.height; // Spread initially
+    p.y = Math.random() * canvas.height;
     particles.push(p);
   }
 
@@ -157,9 +160,7 @@ const VOLCANO_DATA = [
     type: 'Stratovolcano / Caldera',
     lastEruption: '1991 (Ultra-Plinian) / 2021 (Phreatic)',
     elevation: '1,486 m',
-
-     image: 'img/pinatubo.jpg',
-
+    image: 'img/pinatubo.jpg',
     description: 'Pinatubo formed as a direct result of eastward subduction along the Manila Trench. Its 1991 eruption produced the 2nd largest terrestrial eruption of the 20th century, injecting millions of tons of SO2 into the stratosphere and lowering global temperatures.',
     hazards: ['Pyroclastic Flows', 'Extensive Lahars', 'Ashfall', 'Caldera Formation']
   },
@@ -173,9 +174,7 @@ const VOLCANO_DATA = [
     type: 'Complex Volcano / Caldera',
     lastEruption: '2020 - 2022',
     elevation: '311 m',
-
-     image: 'img/taal.jpg',
-
+    image: 'img/taal.jpg',
     description: 'Situated within a large prehistoric caldera lake, Taal is a highly active complex volcano associated with the southern section of the Luzon Volcanic Arc system driven by Manila Trench subduction.',
     hazards: ['Base Surges', 'Volcanic Tsunami', 'Ashfall', 'Phreatomagmatic Eruptions']
   },
@@ -189,7 +188,7 @@ const VOLCANO_DATA = [
     type: 'Stratovolcano',
     lastEruption: '1913',
     elevation: '843 m',
-     image: 'img/babuyan.jpg',
+    image: 'img/babuyan.jpg',
     description: 'Located on Babuyan Island north of mainland Luzon, this volcano marks the northern extension of the Luzon Arc offshore segment created by Manila Trench subduction.',
     hazards: ['Ashfall', 'Lava Flows', 'Pyroclastic Surges']
   },
@@ -203,9 +202,7 @@ const VOLCANO_DATA = [
     type: 'Stratovolcano (Symmetrical Cone)',
     lastEruption: '2023 - 2024 (Strombolian)',
     elevation: '2,463 m',
-
-     image: 'img/mayon.jpg',
-
+    image: 'img/mayon.jpg',
     description: 'Renowned globally for its near-perfect symmetrical cone. Mayon is formed by west-dipping subduction of the Philippine Sea Plate along the Philippine Trench—distinct from the Luzon Volcanic Arc.',
     hazards: ['Pyroclastic Density Currents', 'Lava Flows', 'Lahars', 'Ashfall']
   },
@@ -219,7 +216,7 @@ const VOLCANO_DATA = [
     type: 'Stratovolcano / Caldera Complex',
     lastEruption: '2022 (Phreatic)',
     elevation: '1,565 m',
-     image: 'img/bulusan.jpg',
+    image: 'img/bulusan.jpg',
     description: 'The southernmost volcano on Luzon Island, Bulusan is part of the Bicol Volcanic Chain powered by Philippine Trench dynamics.',
     hazards: ['Phreatic Ash Explosions', 'Lahars', 'Mudflows']
   },
@@ -233,7 +230,7 @@ const VOLCANO_DATA = [
     type: 'Stratovolcano',
     lastEruption: '2024',
     elevation: '2,435 m',
-     image: 'img/kanlaon.jpg',
+    image: 'img/kanlaon.jpg',
     description: 'The highest peak in the Visayas, Kanlaon is an active stratovolcano formed by subduction along the western offshore Negros Trench system.',
     hazards: ['Phreatic Eruptions', 'Ashfall', 'Pyroclastic Flows']
   },
@@ -247,7 +244,7 @@ const VOLCANO_DATA = [
     type: 'Stratovolcano',
     lastEruption: '1911 (Unconfirmed)',
     elevation: '2,286 m',
-     image: 'img/matutum.jpg',
+    image: 'img/matutum.jpg',
     description: 'A symmetrical stratovolcano in southern Mindanao driven by complex collision and subduction along the Cotabato Trench.',
     hazards: ['Pyroclastic Flows', 'Ashfall', 'Landslides']
   }
@@ -262,114 +259,68 @@ function initInteractiveMap() {
 
   if (!markers.length) return;
 
-  // Set up clean map marker clicks without violent transform/shake loops
   markers.forEach(marker => {
-    // Add touch and click event listeners safely
     const handleSelect = (e) => {
       e.preventDefault();
       
-      // Remove selected active class from all markers
       markers.forEach(m => m.classList.remove('selected'));
-      
-      // Highlight clicked marker
       marker.classList.add('selected');
 
       const volcanoId = marker.getAttribute('data-id');
       const data = VOLCANO_DATA.find(v => v.id === volcanoId);
 
-      if (data && panelContent && placeholder) {
-        placeholder.classList.add('hidden');
-        panelContent.classList.remove('hidden');
+      if (data && panelContent) {
+        panelContent.classList.remove('visible');
 
-        panelContent.innerHTML = 
-        panelContent.innerHTML = `
-  <img 
-    src="${data.image}" 
-    alt="${data.name}" 
-    class="volcano-info-image"
-  >
+        setTimeout(() => {
+          if (placeholder) {
+            placeholder.classList.add('hidden');
+          }
 
-  <div class="panel-header">
-    <span class="badge ${data.arcBelonging ? 'badge-arc' : 'badge-other'}">
-      ${data.arcBelonging ? 'Luzon Volcanic Arc' : 'Other Regional Arc'}
-    </span>
-
-    <h3>${data.name}</h3>
-    <p class="loc">📍 ${data.location}</p>
-  </div>
-
-  <div class="panel-details">
-    <div class="detail-row">
-      <span>Associated Trench:</span>
-      <strong>${data.trench}</strong>
-    </div>
-
-    <div class="detail-row">
-      <span>Volcano Type:</span>
-      <strong>${data.type}</strong>
-    </div>
-
-    <div class="detail-row">
-      <span>Recent Activity:</span>
-      <strong>${data.lastEruption}</strong>
-    </div>
-
-    <div class="detail-row">
-      <span>Elevation:</span>
-      <strong>${data.elevation}</strong>
-    </div>
-  </div>
-
-  <p class="panel-desc">${data.description}</p>
-
-  <div class="panel-hazards">
-    <strong>Key Hazards:</strong>
-    <div class="hazard-tags">
-      ${data.hazards.map(h => `<span class="tag">${h}</span>`).join('')}
-    </div>
-  </div>
-`;
-`
-          <div class="panel-header">
-            <span class="badge ${data.arcBelonging ? 'badge-arc' : 'badge-other'}">
-              ${data.arcBelonging ? 'Luzon Volcanic Arc' : 'Other Regional Arc'}
-            </span>
-            <h3>${data.name}</h3>
-            <p class="loc">📍 ${data.location}</p>
-          </div>
-          <div class="panel-details">
-            <div class="detail-row">
-              <span>Associated Trench:</span>
-              <strong>${data.trench}</strong>
+          panelContent.innerHTML = `
+            <img src="${data.image}" alt="${data.name}" class="volcano-info-image">
+            <div class="panel-header">
+              <span class="badge ${data.arcBelonging ? 'badge-arc' : 'badge-other'}">
+                ${data.arcBelonging ? 'Luzon Volcanic Arc' : 'Other Regional Arc'}
+              </span>
+              <h3>${data.name}</h3>
+              <p class="loc">📍 ${data.location}</p>
             </div>
-            <div class="detail-row">
-              <span>Volcano Type:</span>
-              <strong>${data.type}</strong>
+            <div class="panel-details">
+              <div class="detail-row">
+                <span>Associated Trench:</span>
+                <strong>${data.trench}</strong>
+              </div>
+              <div class="detail-row">
+                <span>Volcano Type:</span>
+                <strong>${data.type}</strong>
+              </div>
+              <div class="detail-row">
+                <span>Recent Activity:</span>
+                <strong>${data.lastEruption}</strong>
+              </div>
+              <div class="detail-row">
+                <span>Elevation:</span>
+                <strong>${data.elevation}</strong>
+              </div>
             </div>
-            <div class="detail-row">
-              <span>Recent Activity:</span>
-              <strong>${data.lastEruption}</strong>
+            <p class="panel-desc">${data.description}</p>
+            <div class="panel-hazards">
+              <strong>Key Hazards:</strong>
+              <div class="hazard-tags">
+                ${data.hazards.map(h => `<span class="tag">${h}</span>`).join('')}
+              </div>
             </div>
-            <div class="detail-row">
-              <span>Elevation:</span>
-              <strong>${data.elevation}</strong>
-            </div>
-          </div>
-          <p class="panel-desc">${data.description}</p>
-          <div class="panel-hazards">
-            <strong>Key Hazards:</strong>
-            <div class="hazard-tags">
-              ${data.hazards.map(h => `<span class="tag">${h}</span>`).join('')}
-            </div>
-          </div>
-        `;
+          `;
+
+          panelContent.classList.add('visible');
+        }, 150);
       }
     };
 
     marker.addEventListener('click', handleSelect);
   });
 
-  // Map Filter Buttons
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       filterBtns.forEach(b => b.classList.remove('active'));
@@ -400,86 +351,110 @@ function initInteractiveMap() {
     });
   });
 }
+
 function initMapZoom() {
   const map = document.getElementById('ph-svg-map');
   const zoomIn = document.getElementById('zoom-in');
   const zoomOut = document.getElementById('zoom-out');
   const zoomReset = document.getElementById('zoom-reset');
 
-  if (!map) {
-    console.error('Map SVG not found.');
-    return;
+  if (!map || !zoomIn || !zoomOut || !zoomReset) return;
+
+  const defaultView = { x: 0, y: 0, width: 600, height: 800 };
+  let view = { ...defaultView };
+
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let startViewX = 0;
+  let startViewY = 0;
+
+  function updateMap() {
+    map.setAttribute('viewBox', `${view.x} ${view.y} ${view.width} ${view.height}`);
   }
 
-  if (!zoomIn || !zoomOut || !zoomReset) {
-    console.error('Zoom buttons not found.');
-    return;
-  }
+  function zoom(factor) {
+    const newWidth = view.width * factor;
+    const newHeight = view.height * factor;
 
-  const originalViewBox = {
-    x: 0,
-    y: 0,
-    width: 600,
-    height: 800
-  };
-
-  let currentViewBox = { ...originalViewBox };
-
-  function applyViewBox() {
-    map.setAttribute(
-      'viewBox',
-      `${currentViewBox.x} ${currentViewBox.y} ${currentViewBox.width} ${currentViewBox.height}`
-    );
-  }
-
-  function zoomMap(amount) {
-    const newWidth = currentViewBox.width * amount;
-    const newHeight = currentViewBox.height * amount;
-
-    // Prevent excessive zooming
     if (newWidth < 250 || newWidth > 600) return;
 
-    const centerX =
-      currentViewBox.x + currentViewBox.width / 2;
+    const centerX = view.x + view.width / 2;
+    const centerY = view.y + view.height / 2;
 
-    const centerY =
-      currentViewBox.y + currentViewBox.height / 2;
+    view.width = newWidth;
+    view.height = newHeight;
+    view.x = centerX - newWidth / 2;
+    view.y = centerY - newHeight / 2;
 
-    currentViewBox.width = newWidth;
-    currentViewBox.height = newHeight;
-
-    currentViewBox.x = centerX - newWidth / 2;
-    currentViewBox.y = centerY - newHeight / 2;
-
-    applyViewBox();
+    updateMap();
   }
 
-  zoomIn.addEventListener('click', function () {
-    zoomMap(0.8);
+  zoomIn.addEventListener('click', () => zoom(0.8));
+  zoomOut.addEventListener('click', () => zoom(1.25));
+  zoomReset.addEventListener('click', () => {
+    view = { ...defaultView };
+    updateMap();
   });
 
-  zoomOut.addEventListener('click', function () {
-    zoomMap(1.25);
-  });
-
-  zoomReset.addEventListener('click', function () {
-    currentViewBox = { ...originalViewBox };
-    applyViewBox();
-  });
-
-  map.addEventListener('wheel', function (event) {
+  map.addEventListener('wheel', (event) => {
     event.preventDefault();
-
-    if (event.deltaY < 0) {
-      zoomMap(0.9);
-    } else {
-      zoomMap(1.1);
-    }
+    zoom(event.deltaY < 0 ? 0.9 : 1.1);
   }, { passive: false });
 
-  applyViewBox();
+  map.addEventListener('mousedown', (event) => {
+    isDragging = true;
+    startX = event.clientX;
+    startY = event.clientY;
+    startViewX = view.x;
+    startViewY = view.y;
+    map.style.cursor = 'grabbing';
+  });
 
-  console.log('Map zoom initialized.');
+  window.addEventListener('mousemove', (event) => {
+    if (!isDragging) return;
+    const rect = map.getBoundingClientRect();
+    const scaleX = view.width / rect.width;
+    const scaleY = view.height / rect.height;
+
+    view.x = startViewX - (event.clientX - startX) * scaleX;
+    view.y = startViewY - (event.clientY - startY) * scaleY;
+
+    updateMap();
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    map.style.cursor = 'grab';
+  });
+
+  map.addEventListener('touchstart', (event) => {
+    if (event.touches.length !== 1) return;
+    isDragging = true;
+    startX = event.touches[0].clientX;
+    startY = event.touches[0].clientY;
+    startViewX = view.x;
+    startViewY = view.y;
+  }, { passive: true });
+
+  map.addEventListener('touchmove', (event) => {
+    if (!isDragging || event.touches.length !== 1) return;
+    const rect = map.getBoundingClientRect();
+    const scaleX = view.width / rect.width;
+    const scaleY = view.height / rect.height;
+
+    view.x = startViewX - (event.touches[0].clientX - startX) * scaleX;
+    view.y = startViewY - (event.touches[0].clientY - startY) * scaleY;
+
+    updateMap();
+  }, { passive: true });
+
+  map.addEventListener('touchend', () => {
+    isDragging = false;
+  });
+
+  map.style.cursor = 'grab';
 }
 
 /* ==========================================================================
@@ -491,6 +466,31 @@ function initVolcanoGallery() {
   const filterBtns = document.querySelectorAll('.gallery-controls .filter-btn');
 
   if (!grid) return;
+
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    
+    const filtered = VOLCANO_DATA.filter(v => {
+      const matchesSearch = v.name.toLowerCase().includes(query) ||
+                            v.location.toLowerCase().includes(query) ||
+                            v.trench.toLowerCase().includes(query);
+
+      let matchesFilter = true;
+      if (activeFilter === 'luzon') {
+        matchesFilter = v.arcBelonging;
+      } else if (activeFilter === 'stratovolcano') {
+        matchesFilter = v.type.toLowerCase().includes('stratovolcano');
+      } else if (activeFilter === 'complex') {
+        matchesFilter = v.type.toLowerCase().includes('complex') || v.type.toLowerCase().includes('caldera');
+      }
+
+      return matchesSearch && matchesFilter;
+    });
+
+    renderVolcanoes(filtered);
+  }
 
   function renderVolcanoes(data) {
     grid.innerHTML = '';
@@ -518,8 +518,7 @@ function initVolcanoGallery() {
       grid.appendChild(card);
     });
 
-    // Attach modal trigger handlers
-    document.querySelectorAll('[data-modal-id]').forEach(btn => {
+    grid.querySelectorAll('[data-modal-id]').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-modal-id');
         openVolcanoModal(id);
@@ -527,40 +526,18 @@ function initVolcanoGallery() {
     });
   }
 
-  // Initial Render
   renderVolcanoes(VOLCANO_DATA);
 
-  // Search Input Handler
   if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
-      const filtered = VOLCANO_DATA.filter(v => 
-        v.name.toLowerCase().includes(query) ||
-        v.location.toLowerCase().includes(query) ||
-        v.trench.toLowerCase().includes(query)
-      );
-      renderVolcanoes(filtered);
-    });
+    searchInput.addEventListener('input', applyFilters);
   }
 
-  // Filter Buttons
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      const filterVal = btn.getAttribute('data-filter');
-      let filtered = VOLCANO_DATA;
-
-      if (filterVal === 'luzon') {
-        filtered = VOLCANO_DATA.filter(v => v.arcBelonging);
-      } else if (filterVal === 'stratovolcano') {
-        filtered = VOLCANO_DATA.filter(v => v.type.toLowerCase().includes('stratovolcano'));
-      } else if (filterVal === 'complex') {
-        filtered = VOLCANO_DATA.filter(v => v.type.toLowerCase().includes('complex') || v.type.toLowerCase().includes('caldera'));
-      }
-
-      renderVolcanoes(filtered);
+      activeFilter = btn.getAttribute('data-filter') || 'all';
+      applyFilters();
     });
   });
 }
@@ -608,13 +585,11 @@ function initSimulation() {
   const btnReset = document.getElementById('sim-reset');
 
   let currentStep = 0;
-  let animProgress = 0;
-  let animationId = null;
 
   function drawBase() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Sky / Ocean background
+    // Sky / Ocean
     ctx.fillStyle = '#0B132B';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -648,25 +623,21 @@ function initSimulation() {
     drawBase();
 
     if (step >= 1) {
-      // Step 1: Subducting Plate Positioned
       ctx.fillStyle = '#3A506B';
       ctx.beginPath();
       ctx.moveTo(0, 140);
       ctx.lineTo(260, 140);
-      // Slab bending downward into mantle
       ctx.lineTo(260 + (step >= 2 ? 150 : 0), 140 + (step >= 2 ? 170 : 0));
       ctx.lineTo(200 + (step >= 2 ? 150 : 0), 140 + (step >= 2 ? 170 : 0));
       ctx.lineTo(0, 160);
       ctx.closePath();
       ctx.fill();
 
-      // Label Manila Trench
       ctx.fillStyle = '#E07A5F';
       ctx.fillText('▼ Manila Trench', 230, 130);
     }
 
     if (step >= 3) {
-      // Step 3: Dewatering & Flux Melting Zone
       ctx.fillStyle = 'rgba(100, 223, 223, 0.4)';
       ctx.beginPath();
       ctx.arc(330, 260, 25, 0, Math.PI * 2);
@@ -677,14 +648,11 @@ function initSimulation() {
     }
 
     if (step >= 4) {
-      // Step 4: Magma Ascent
       ctx.fillStyle = 'rgba(224, 122, 95, 0.8)';
-      // Magma chamber
       ctx.beginPath();
       ctx.arc(480, 200, 22, 0, Math.PI * 2);
       ctx.fill();
 
-      // Magma conduit rising to surface
       ctx.fillRect(476, 140, 8, 60);
 
       ctx.fillStyle = '#E07A5F';
@@ -692,9 +660,7 @@ function initSimulation() {
     }
 
     if (step >= 5) {
-      // Step 5: Volcanic Arc Constructed
       ctx.fillStyle = '#E07A5F';
-      // Volcano 1
       ctx.beginPath();
       ctx.moveTo(440, 140);
       ctx.lineTo(480, 80);
@@ -702,7 +668,6 @@ function initSimulation() {
       ctx.closePath();
       ctx.fill();
 
-      // Eruption plume
       ctx.fillStyle = 'rgba(244, 241, 222, 0.7)';
       ctx.beginPath();
       ctx.arc(480, 60, 15, 0, Math.PI * 2);
@@ -716,16 +681,14 @@ function initSimulation() {
     }
   }
 
-  // Initial draw
   drawBase();
 
-  // Control Buttons
   if (btn1) {
     btn1.addEventListener('click', () => {
       currentStep = 1;
       renderStep(1);
-      statusText.textContent = "Step 1: Oceanic slab of the South China Sea moves toward the overriding Philippine Mobile Belt.";
-      btn2.disabled = false;
+      if (statusText) statusText.textContent = "Step 1: Oceanic slab of the South China Sea moves toward the overriding Philippine Mobile Belt.";
+      if (btn2) btn2.disabled = false;
     });
   }
 
@@ -733,8 +696,8 @@ function initSimulation() {
     btn2.addEventListener('click', () => {
       currentStep = 2;
       renderStep(2);
-      statusText.textContent = "Step 2: Subduction occurs. The oceanic slab sinks downward into the high-temperature mantle at the Manila Trench.";
-      btn3.disabled = false;
+      if (statusText) statusText.textContent = "Step 2: Subduction occurs. The oceanic slab sinks downward into the high-temperature mantle at the Manila Trench.";
+      if (btn3) btn3.disabled = false;
     });
   }
 
@@ -742,8 +705,8 @@ function initSimulation() {
     btn3.addEventListener('click', () => {
       currentStep = 3;
       renderStep(3);
-      statusText.textContent = "Step 3: Flux Melting! Sinking hydrated minerals release water, lowering the melting point of mantle rocks.";
-      btn4.disabled = false;
+      if (statusText) statusText.textContent = "Step 3: Flux Melting! Sinking hydrated minerals release water, lowering the melting point of mantle rocks.";
+      if (btn4) btn4.disabled = false;
     });
   }
 
@@ -751,8 +714,8 @@ function initSimulation() {
     btn4.addEventListener('click', () => {
       currentStep = 4;
       renderStep(4);
-      statusText.textContent = "Step 4: Magma Ascent! The hot, buoyant magma collects in chambers and begins forcing its way up through crustal fractures.";
-      btn5.disabled = false;
+      if (statusText) statusText.textContent = "Step 4: Magma Ascent! The hot, buoyant magma collects in chambers and begins forcing its way up through crustal fractures.";
+      if (btn5) btn5.disabled = false;
     });
   }
 
@@ -760,7 +723,7 @@ function initSimulation() {
     btn5.addEventListener('click', () => {
       currentStep = 5;
       renderStep(5);
-      statusText.textContent = "Step 5: Eruption & Arc Construction! Over millions of years, eruptions build a line of volcanoes parallel to the Manila Trench: The Luzon Volcanic Arc.";
+      if (statusText) statusText.textContent = "Step 5: Eruption & Arc Construction! Over millions of years, eruptions build a line of volcanoes parallel to the Manila Trench: The Luzon Volcanic Arc.";
     });
   }
 
@@ -768,11 +731,11 @@ function initSimulation() {
     btnReset.addEventListener('click', () => {
       currentStep = 0;
       drawBase();
-      statusText.textContent = "Click Step 1 to position the subducting oceanic slab beneath the overriding crust.";
-      btn2.disabled = true;
-      btn3.disabled = true;
-      btn4.disabled = true;
-      btn5.disabled = true;
+      if (statusText) statusText.textContent = "Click Step 1 to position the subducting oceanic slab beneath the overriding crust.";
+      if (btn2) btn2.disabled = true;
+      if (btn3) btn3.disabled = true;
+      if (btn4) btn4.disabled = true;
+      if (btn5) btn5.disabled = true;
     });
   }
 }
@@ -785,9 +748,12 @@ function initModal() {
   const closeBtn = document.getElementById('modal-close');
   const modalBody = document.getElementById('modal-body');
 
-  if (!modal || !closeBtn) return;
+  if (!modal) return;
 
-  closeBtn.addEventListener('click', closeModal);
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeModal);
+  }
+
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
   });
