@@ -1091,30 +1091,27 @@ p {
     transform: rotate(90deg);
   }
 }
+
+
+.panel-content {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.panel-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .volcano-info-image {
   width: 100%;
   height: 190px;
   object-fit: cover;
   display: block;
-  border-radius: 5px;
+  border-radius: 6px;
   margin-bottom: 1.2rem;
   border: 1px solid var(--color-slate-blue);
-}
-
-.panel-header h3 {
-  margin-top: 0.4rem;
-}
-
-.panel-content {
-  opacity: 0;
-  transform: translateY(16px) scale(0.98);
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-   overflow: hidden;
-}
-
-.panel-content.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
 }
