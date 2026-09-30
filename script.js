@@ -406,70 +406,82 @@ function initMapZoom() {
   const zoomOut = document.getElementById('zoom-out');
   const zoomReset = document.getElementById('zoom-reset');
 
-  if (!map || !zoomIn || !zoomOut || !zoomReset) return;
+  if (!map) {
+    console.error('Map SVG not found.');
+    return;
+  }
 
-  const defaultViewBox = {
+  if (!zoomIn || !zoomOut || !zoomReset) {
+    console.error('Zoom buttons not found.');
+    return;
+  }
+
+  const originalViewBox = {
     x: 0,
     y: 0,
     width: 600,
     height: 800
   };
 
-  let viewBox = { ...defaultViewBox };
+  let currentViewBox = { ...originalViewBox };
 
-  const MIN_WIDTH = 300;
-  const MAX_WIDTH = 1000;
-
-  function updateViewBox() {
+  function applyViewBox() {
     map.setAttribute(
       'viewBox',
-      `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`
+      `${currentViewBox.x} ${currentViewBox.y} ${currentViewBox.width} ${currentViewBox.height}`
     );
   }
 
-  function zoom(factor) {
-    const newWidth = viewBox.width * factor;
-    const newHeight = viewBox.height * factor;
+  function zoomMap(amount) {
+    const newWidth = currentViewBox.width * amount;
+    const newHeight = currentViewBox.height * amount;
 
-    if (newWidth < MIN_WIDTH || newWidth > MAX_WIDTH) {
-      return;
-    }
+    // Prevent excessive zooming
+    if (newWidth < 250 || newWidth > 600) return;
 
-    const centerX = viewBox.x + viewBox.width / 2;
-    const centerY = viewBox.y + viewBox.height / 2;
+    const centerX =
+      currentViewBox.x + currentViewBox.width / 2;
 
-    viewBox.width = newWidth;
-    viewBox.height = newHeight;
+    const centerY =
+      currentViewBox.y + currentViewBox.height / 2;
 
-    viewBox.x = centerX - newWidth / 2;
-    viewBox.y = centerY - newHeight / 2;
+    currentViewBox.width = newWidth;
+    currentViewBox.height = newHeight;
 
-    updateViewBox();
+    currentViewBox.x = centerX - newWidth / 2;
+    currentViewBox.y = centerY - newHeight / 2;
+
+    applyViewBox();
   }
 
-  zoomIn.addEventListener('click', () => {
-    zoom(0.8);
+  zoomIn.addEventListener('click', function () {
+    zoomMap(0.8);
   });
 
-  zoomOut.addEventListener('click', () => {
-    zoom(1.25);
+  zoomOut.addEventListener('click', function () {
+    zoomMap(1.25);
   });
 
-  zoomReset.addEventListener('click', () => {
-    viewBox = { ...defaultViewBox };
-    updateViewBox();
+  zoomReset.addEventListener('click', function () {
+    currentViewBox = { ...originalViewBox };
+    applyViewBox();
   });
 
-  map.addEventListener('wheel', (event) => {
+  map.addEventListener('wheel', function (event) {
     event.preventDefault();
 
     if (event.deltaY < 0) {
-      zoom(0.9);
+      zoomMap(0.9);
     } else {
-      zoom(1.1);
+      zoomMap(1.1);
     }
   }, { passive: false });
+
+  applyViewBox();
+
+  console.log('Map zoom initialized.');
 }
+
 /* ==========================================================================
    4. VOLCANO GALLERY & SEARCH/FILTER
    ========================================================================== */
