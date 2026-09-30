@@ -408,6 +408,43 @@ p {
   display: flex;
   justify-content: center;
 }
+.map-zoom-controls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.map-zoom-controls button {
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid var(--color-slate-blue);
+  border-radius: 4px;
+
+  background: rgba(7, 13, 30, 0.9);
+  color: var(--color-cyan);
+
+  font-size: 1.25rem;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.map-zoom-controls button:hover {
+  background-color: var(--color-navy);
+  color: var(--color-orange);
+  border-color: var(--color-orange);
+}
 
 #ph-svg-map {
   width: 100%;
