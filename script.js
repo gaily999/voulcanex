@@ -255,103 +255,164 @@ function initInteractiveMap() {
   const filterBtns = document.querySelectorAll('[data-map-filter]');
   const infoPanel = document.getElementById('map-info-panel');
   const panelContent = document.getElementById('panel-content');
-  const placeholder = infoPanel ? infoPanel.querySelector('.panel-placeholder') : null;
+  const placeholder = infoPanel
+    ? infoPanel.querySelector('.panel-placeholder')
+    : null;
 
-  if (!markers.length) return;
+  if (!markers.length || !panelContent || !placeholder) return;
 
   markers.forEach(marker => {
-    const handleSelect = (e) => {
+
+    marker.addEventListener('click', (e) => {
       e.preventDefault();
-      
+      e.stopPropagation();
+
+      // Remove selected state
       markers.forEach(m => m.classList.remove('selected'));
+
+      // Select clicked marker
       marker.classList.add('selected');
 
+      // Get volcano ID
       const volcanoId = marker.getAttribute('data-id');
+
+      // Find volcano information
       const data = VOLCANO_DATA.find(v => v.id === volcanoId);
 
-      if (data && panelContent) {
-        panelContent.classList.remove('visible');
-
-        setTimeout(() => {
-          if (placeholder) {
-            placeholder.classList.add('hidden');
-          }
-
-          panelContent.innerHTML = `
-            <img src="${data.image}" alt="${data.name}" class="volcano-info-image">
-            <div class="panel-header">
-              <span class="badge ${data.arcBelonging ? 'badge-arc' : 'badge-other'}">
-                ${data.arcBelonging ? 'Luzon Volcanic Arc' : 'Other Regional Arc'}
-              </span>
-              <h3>${data.name}</h3>
-              <p class="loc">📍 ${data.location}</p>
-            </div>
-            <div class="panel-details">
-              <div class="detail-row">
-                <span>Associated Trench:</span>
-                <strong>${data.trench}</strong>
-              </div>
-              <div class="detail-row">
-                <span>Volcano Type:</span>
-                <strong>${data.type}</strong>
-              </div>
-              <div class="detail-row">
-                <span>Recent Activity:</span>
-                <strong>${data.lastEruption}</strong>
-              </div>
-              <div class="detail-row">
-                <span>Elevation:</span>
-                <strong>${data.elevation}</strong>
-              </div>
-            </div>
-            <p class="panel-desc">${data.description}</p>
-            <div class="panel-hazards">
-              <strong>Key Hazards:</strong>
-              <div class="hazard-tags">
-                ${data.hazards.map(h => `<span class="tag">${h}</span>`).join('')}
-              </div>
-            </div>
-          `;
-
-          panelContent.classList.add('visible');
-        }, 150);
+      if (!data) {
+        console.error('No volcano data found for:', volcanoId);
+        return;
       }
-    };
 
-    marker.addEventListener('click', handleSelect);
+      console.log('Selected volcano:', data.name);
+
+      // Hide placeholder
+      placeholder.classList.add('hidden');
+
+      // Make information panel visible
+      panelContent.classList.remove('hidden');
+
+      // Add volcano information
+      panelContent.innerHTML = `
+        <img
+          src="${data.image}"
+          alt="${data.name}"
+          class="volcano-info-image"
+        >
+
+        <div class="panel-header">
+
+          <span class="badge ${data.arcBelonging ? 'badge-arc' : 'badge-other'}">
+            ${data.arcBelonging
+              ? 'Luzon Volcanic Arc'
+              : 'Other Regional Arc'}
+          </span>
+
+          <h3>${data.name}</h3>
+
+          <p class="loc">
+            📍 ${data.location}
+          </p>
+
+        </div>
+
+        <div class="panel-details">
+
+          <div class="detail-row">
+            <span>Associated Trench:</span>
+            <strong>${data.trench}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Volcano Type:</span>
+            <strong>${data.type}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Recent Activity:</span>
+            <strong>${data.lastEruption}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Elevation:</span>
+            <strong>${data.elevation}</strong>
+          </div>
+
+        </div>
+
+        <p class="panel-desc">
+          ${data.description}
+        </p>
+
+        <div class="panel-hazards">
+
+          <strong>Key Hazards:</strong>
+
+          <div class="hazard-tags">
+            ${data.hazards
+              .map(h => `<span class="tag">${h}</span>`)
+              .join('')}
+          </div>
+
+        </div>
+      `;
+
+      // Show panel animation
+      requestAnimationFrame(() => {
+        panelContent.classList.add('visible');
+      });
+
+    });
+
   });
 
+
+  /* =========================
+     MAP FILTER BUTTONS
+     ========================= */
+
   filterBtns.forEach(btn => {
+
     btn.addEventListener('click', () => {
+
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
       const filter = btn.getAttribute('data-map-filter');
 
       markers.forEach(marker => {
+
         if (filter === 'all') {
+
           marker.style.display = 'block';
           marker.style.opacity = '1';
+
         } else if (filter === 'luzon-arc') {
+
           if (marker.classList.contains('luzon-arc')) {
             marker.style.display = 'block';
             marker.style.opacity = '1';
           } else {
             marker.style.opacity = '0.15';
           }
+
         } else if (filter === 'other-arc') {
+
           if (marker.classList.contains('other-arc')) {
             marker.style.display = 'block';
             marker.style.opacity = '1';
           } else {
             marker.style.opacity = '0.15';
           }
+
         }
+
       });
+
     });
+
   });
 }
-
 function initMapZoom() {
   const map = document.getElementById('ph-svg-map');
   const zoomIn = document.getElementById('zoom-in');
