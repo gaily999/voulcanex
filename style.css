@@ -1101,10 +1101,20 @@ p {
   border: 1px solid var(--color-slate-blue);
 }
 
-.panel-content {
-  overflow: hidden;
-}
-
 .panel-header h3 {
   margin-top: 0.4rem;
+}
+
+.panel-content {
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+   overflow: hidden;
+}
+
+.panel-content.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
