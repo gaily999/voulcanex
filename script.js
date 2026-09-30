@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initParticleCanvas();
   initInteractiveMap();
+  initMapZoom();
   initVolcanoGallery();
   initStepper();
   initSimulation();
@@ -399,7 +400,76 @@ function initInteractiveMap() {
     });
   });
 }
+function initMapZoom() {
+  const map = document.getElementById('ph-svg-map');
+  const zoomIn = document.getElementById('zoom-in');
+  const zoomOut = document.getElementById('zoom-out');
+  const zoomReset = document.getElementById('zoom-reset');
 
+  if (!map || !zoomIn || !zoomOut || !zoomReset) return;
+
+  const defaultViewBox = {
+    x: 0,
+    y: 0,
+    width: 600,
+    height: 800
+  };
+
+  let viewBox = { ...defaultViewBox };
+
+  const MIN_WIDTH = 300;
+  const MAX_WIDTH = 1000;
+
+  function updateViewBox() {
+    map.setAttribute(
+      'viewBox',
+      `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`
+    );
+  }
+
+  function zoom(factor) {
+    const newWidth = viewBox.width * factor;
+    const newHeight = viewBox.height * factor;
+
+    if (newWidth < MIN_WIDTH || newWidth > MAX_WIDTH) {
+      return;
+    }
+
+    const centerX = viewBox.x + viewBox.width / 2;
+    const centerY = viewBox.y + viewBox.height / 2;
+
+    viewBox.width = newWidth;
+    viewBox.height = newHeight;
+
+    viewBox.x = centerX - newWidth / 2;
+    viewBox.y = centerY - newHeight / 2;
+
+    updateViewBox();
+  }
+
+  zoomIn.addEventListener('click', () => {
+    zoom(0.8);
+  });
+
+  zoomOut.addEventListener('click', () => {
+    zoom(1.25);
+  });
+
+  zoomReset.addEventListener('click', () => {
+    viewBox = { ...defaultViewBox };
+    updateViewBox();
+  });
+
+  map.addEventListener('wheel', (event) => {
+    event.preventDefault();
+
+    if (event.deltaY < 0) {
+      zoom(0.9);
+    } else {
+      zoom(1.1);
+    }
+  }, { passive: false });
+}
 /* ==========================================================================
    4. VOLCANO GALLERY & SEARCH/FILTER
    ========================================================================== */
